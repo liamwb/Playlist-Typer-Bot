@@ -2,6 +2,8 @@
 Playlist-Typer-Bot, by Liam Wood-Baker, 2020.
 This bot listens for someone who wants to queue a spotify playlist in a chat with Rhythm in it, and
 writes the commands for each song in the playlist in to the chat.
+
+This bot does not, in fact, work. Rythm does not listen to other bots
 """
 
 import spotipy.oauth2 as oauth2
@@ -26,7 +28,7 @@ playlistTest = spotify.playlist(
     playlist_id='https://open.spotify.com/playlist/5KfPRv6ynvPD2VwfD4y7ni?si=f6B4-7FURgSlbr-hSZTT7g')
 
 # the bot proper begins. Authorisation for the discord bot happens at the end with bot.run(discordToken)
-bot = commands.Bot(command_prefix='!')
+bot = commands.Bot(command_prefix='?')
 
 
 @bot.event
