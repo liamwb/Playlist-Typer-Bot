@@ -1,9 +1,23 @@
-import os
+import spotipy.oauth2 as oauth2
+import spotipy
 import discord
 from discord.ext import commands
-# from dotenv import load_dotenv
 
-token = 'Njk3NjEzMTc5MzIwMTM5ODQ2.Xo55oQ.Os4lfdobuEo6sf2JCm46wSlGfoE'
+discordToken = open('DISCORD-TOKEN.txt').read()
+
+
+clientSecret = open('SPOTIFY-CLIENT-SECRET.txt').read()
+
+credentials = oauth2.SpotifyClientCredentials(
+        client_id='b9a5c48552a84a5fb7a47acea0d2d9fc',
+        client_secret=clientSecret)
+
+spotifyToken = credentials.get_access_token()
+spotify = spotipy.Spotify(auth=spotifyToken)
+
+print(spotify.playlist(playlist_id='https://open.spotify.com/playlist/5KfPRv6ynvPD2VwfD4y7ni?si=f6B4-7FURgSlbr-hSZTT7g'))
+
+
 
 bot = commands.Bot(command_prefix='!')
 
@@ -18,4 +32,4 @@ async def QueuePlaylist(url):
     await url.channel.send("it works")
 
 
-bot.run(token)
+bot.run(discordToken)
