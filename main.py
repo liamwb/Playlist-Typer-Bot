@@ -4,7 +4,6 @@ This bot listens for someone who wants to queue a spotify playlist in a chat wit
 writes the commands for each song in the playlist in to the chat.
 """
 
-
 import spotipy.oauth2 as oauth2
 import spotipy
 import json
@@ -17,27 +16,34 @@ clientSecret = open('SPOTIFY-CLIENT-SECRET.txt').read()
 
 # getting authorisation for spotify
 credentials = oauth2.SpotifyClientCredentials(
-        client_id='b9a5c48552a84a5fb7a47acea0d2d9fc',
-        client_secret=clientSecret)
+    client_id='b9a5c48552a84a5fb7a47acea0d2d9fc',
+    client_secret=clientSecret)
 
 spotifyToken = credentials.get_access_token()
 spotify = spotipy.Spotify(auth=spotifyToken)
 
-
-playlistTest = spotify.playlist(playlist_id='https://open.spotify.com/playlist/5KfPRv6ynvPD2VwfD4y7ni?si=f6B4-7FURgSlbr-hSZTT7g')
-print(json.dumps(playlistTest, indent=4))
+playlistTest = spotify.playlist(
+    playlist_id='https://open.spotify.com/playlist/5KfPRv6ynvPD2VwfD4y7ni?si=f6B4-7FURgSlbr-hSZTT7g')
 
 # the bot proper begins. Authorisation for the discord bot happens at the end with bot.run(discordToken)
 bot = commands.Bot(command_prefix='!')
+
 
 @bot.event
 async def on_ready():
     print(f'{bot.user} has connected to Discord!')
 
 
-@bot.command(name='QueuePlaylist')
-async def QueuePlaylist(url):
-    await url.channel.send("it works")
+@bot.command(name='queuePlaylist')
+async def queuePlaylist(ctx, url: str):
+    playlist = spotify.playlist(playlist_id=url)
+    # playlist is a dict. We can find the info we want by navigating through 'tracks', and then 'items'
+    for i in playlist['tracks']['items']:
+        # if a track has multiple artists we're just looking at the first one
+        artist = i['track']['artists'][0]['name']
+        song = i['track']['name']
+        await ctx.send('!play' + ' ' + song + ' ' + artist)
+
 
 
 bot.run(discordToken)
