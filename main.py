@@ -34,6 +34,16 @@ async def on_ready():
     print(f'{bot.user} has connected to Discord!')
 
 
+@bot.command(name='summon')
+async def summon(ctx):
+    # If summon is not called from a voice channel, then the bot doesn't know which one to join, so it doesn't
+    if not ctx.author.voice:
+        await ctx.send('You\'re not in a voice channel. \nYou\'re a big fuckhead.')
+    else:
+        channel = ctx.author.voice.channel
+        await channel.connect()
+
+# the whole point of this bot
 @bot.command(name='queuePlaylist')
 async def queuePlaylist(ctx, url: str):
     playlist = spotify.playlist(playlist_id=url)
